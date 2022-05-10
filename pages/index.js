@@ -14,20 +14,24 @@ const Index = () => {
   const [total, setTotal] = useState(0);
   useEffect(() => {
     const getAllData = async () => {
-      setLoading(true);
-      const dataStudentsInfo = await getData(
-        "students/3b35fb50-3d5e-41b3-96d6-c5566141fab0/"
-      );
-      const dataStudentsOrders = await getData(
-        "students/3b35fb50-3d5e-41b3-96d6-c5566141fab0/orders"
-      );
-      const dataAddIsChecked = dataStudentsOrders.map((item) => ({
-        ...item,
-        isChecked: false,
-      }));
-      setAllDataStudentsInfo(dataStudentsInfo);
-      setAllDataStudentsOrders(dataAddIsChecked);
-      setLoading(false);
+      try {
+        setLoading(true);
+        const dataStudentsInfo = await getData(
+          "students/3b35fb50-3d5e-41b3-96d6-c5566141fab0/"
+        );
+        const dataStudentsOrders = await getData(
+          "students/3b35fb50-3d5e-41b3-96d6-c5566141fab0/orders"
+        );
+        const dataAddIsChecked = dataStudentsOrders.map((item) => ({
+          ...item,
+          isChecked: false,
+        }));
+        setAllDataStudentsInfo(dataStudentsInfo);
+        setAllDataStudentsOrders(dataAddIsChecked);
+        setLoading(false);
+      } catch (error) {
+        alert("No se pudo acceder a la API ya que es not secure URL HTTP");
+      }
     };
     getAllData();
   }, []);
