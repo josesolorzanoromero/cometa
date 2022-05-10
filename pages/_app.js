@@ -4,12 +4,12 @@ import Head from "next/head";
 function MyApp({ Component, pageProps }) {
   return (
     <>
-      <Head>
+      {/* <Head>
         <meta
           httpEquiv="Content-Security-Policy"
           content="upgrade-insecure-requests"
         />
-      </Head>
+      </Head> */}
       <Component {...pageProps} />
     </>
   );
