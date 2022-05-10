@@ -4,7 +4,7 @@ export const getData = async (url, token) => {
     method: "GET",
     headers: {
       hash: "OcJn4jYChW",
-      credentials: "include",
+      // credentials: "include",
     },
   });
 
