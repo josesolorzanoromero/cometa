@@ -6,6 +6,10 @@ import { AiOutlineRight } from "react-icons/ai";
 const Index = () => {
   const [allDataStudentsInfo, setAllDataStudentsInfo] = useState({});
   const [allDataStudentsOrdes, setAllDataStudentsOrders] = useState([]);
+  const [checkedStatus, setCheckedStatus] = useState({
+    due: false,
+    outstanding: false,
+  });
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
   useEffect(() => {
@@ -29,14 +33,6 @@ const Index = () => {
   }, []);
 
   const handleAddTotal = (id) => {
-    // const newArray = [];
-    // for (let i = 0; i < allDataStudentsOrdes.length; i++) {
-    //   let item = { ...allDataStudentsOrdes[i] };
-    //   if (item.id == id) item = { ...item, isChecked: !item.isChecked };
-    //   newArray.push(item);
-    // }
-
-    // setAllDataStudentsOrders(newArray);
     const newArray = allDataStudentsOrdes.map((item) => {
       item =
         item.id == id ? { ...item, isChecked: !item.isChecked } : { ...item };
@@ -58,6 +54,31 @@ const Index = () => {
           ).toFixed(2)
     );
   };
+
+  const handleSelectAll = (status) => {
+    const newArray = allDataStudentsOrdes.map((item) => {
+      item =
+        item.status.toLowerCase() == status
+          ? { ...item, isChecked: !checkedStatus[status] ? true : false }
+          : { ...item };
+      return item;
+    });
+
+    setAllDataStudentsOrders(newArray);
+    setCheckedStatus({ ...checkedStatus, [status]: !checkedStatus[status] });
+    setTotal(
+      newArray.reduce(
+        (acc, item) =>
+          item.isChecked
+            ? parseFloat(acc) +
+              parseFloat(item.price) +
+              parseFloat(item.interest ? item.interest : 0)
+            : acc,
+        0
+      )
+    );
+  };
+
   return (
     <div className="flex flex-col gap-4 max-w-md mx-auto">
       <Header
@@ -112,6 +133,17 @@ const Index = () => {
               <summary className="cursor-pointer font-semibold">
                 Cuotas Pendientes
               </summary>
+              <div className="flex gap-3 justify-end">
+                <p>Seleccionar todas</p>
+                <div className="flex flex-col gap-3 text-2xl">
+                  <input
+                    type="checkbox"
+                    checked={checkedStatus.due}
+                    className="w-8 h-8 accent-black"
+                    onChange={() => handleSelectAll("due")}
+                  />
+                </div>
+              </div>
               {allDataStudentsOrdes.map(
                 (item) =>
                   item.status == "DUE" && (
@@ -129,7 +161,6 @@ const Index = () => {
                         </div>
                         <div className="flex flex-col gap-3 text-2xl">
                           <input
-                            name={item.id}
                             type="checkbox"
                             checked={item.isChecked}
                             className="w-8 h-8 accent-black"
@@ -148,6 +179,17 @@ const Index = () => {
               <summary className="cursor-pointer font-semibold">
                 Cuotas Futuras
               </summary>
+              <div className="flex gap-3 justify-end">
+                <p>Seleccionar todas</p>
+                <div className="flex flex-col gap-3 text-2xl">
+                  <input
+                    type="checkbox"
+                    checked={checkedStatus.outstanding}
+                    className="w-8 h-8 accent-black"
+                    onChange={() => handleSelectAll("outstanding")}
+                  />
+                </div>
+              </div>
               {allDataStudentsOrdes.map(
                 (item) =>
                   item.status == "OUTSTANDING" && (
@@ -165,7 +207,6 @@ const Index = () => {
                         </div>
                         <div className="flex flex-col gap-3 text-2xl">
                           <input
-                            name={item.id}
                             type="checkbox"
                             checked={item.isChecked}
                             className="w-8 h-8 accent-black"
